@@ -1,0 +1,6 @@
+BASE_URL = "https://adilo-api.bigcommand.com/v1"
+PROJECTS_URL = f"{BASE_URL}/projects"
+FOLDERS_URL = f"{BASE_URL}/folders"
+FILES_URL = f"{BASE_URL}/files"
+FILES_UPLOAD_URL = f"{FILES_URL}/upload"
+USERS_URL = f"{BASE_URL}/users"
