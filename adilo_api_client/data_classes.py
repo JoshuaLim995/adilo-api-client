@@ -56,7 +56,10 @@ class Part:
     etag: str
 
     def to_dict(self):
-        return dataclasses.asdict(self)
+        return {
+            "PartNumber": self.part_number,
+            "ETag": self.etag,
+        }
 
     def to_json(self):
         return json.dumps(self.to_dict())

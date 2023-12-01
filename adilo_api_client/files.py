@@ -68,7 +68,11 @@ def complete_file_upload(
     parts: list[Part],
 ):
     # Make a POST request to complete the multipart upload
-    data = {"key": key, "uploadId": upload_id, "parts": parts}
+    data = {
+        "key": key,
+        "uploadId": upload_id,
+        "parts": [part.to_dict() for part in parts],
+    }
 
     response = requests.post(
         f"{urls.FILES_UPLOAD_URL}/complete", headers=headers, json=data

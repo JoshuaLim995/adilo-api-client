@@ -17,7 +17,8 @@ def handle_response(response: Response):
         )
     elif status_code == 422:
         raise exceptions.BadRequestException(
-            "Error 422: Unprocessed Entity - The input data was invalid"
+            "Error 422: Unprocessed Entity - The input data was invalid",
+            response.json(),
         )
     else:
         raise exceptions.UnknownException(

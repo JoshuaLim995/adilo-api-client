@@ -1,4 +1,5 @@
 import unittest
+from adilo_api_client.data_classes import Part
 
 from tests.test_adilo_api_client import TestAdiloAPI
 
