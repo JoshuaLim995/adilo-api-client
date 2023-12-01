@@ -1,4 +1,4 @@
-from . import files, folders, projects, users
+from adilo_api_client import files, folders, projects, users
 
 
 class AdiloAPI:

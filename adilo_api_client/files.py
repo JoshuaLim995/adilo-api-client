@@ -2,8 +2,8 @@ import dataclasses
 
 import requests
 
-from . import endpoint_urls as urls
-from .response_helper import handle_response
+from adilo_api_client import endpoint_urls as urls
+from adilo_api_client.response_helper import handle_response
 
 
 @dataclasses.dataclass
