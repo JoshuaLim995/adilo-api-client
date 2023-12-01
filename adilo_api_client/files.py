@@ -4,7 +4,7 @@ from typing import Any
 import requests
 
 from adilo_api_client import endpoint_urls as urls
-from adilo_api_client.data_classes import Part
+from adilo_api_client.data_classes import InitiateUpload, Part, SignedUpload
 from adilo_api_client.response_helper import handle_response
 
 
@@ -16,7 +16,8 @@ def initiate_file_upload(
     duration_string: str,
     mime_type: str,
     project_id: str,
-    drm_protection: bool,
+    folder_id: str | None = None,
+    drm_protection: bool = False,
 ):
     # Make a POST request to initiate a file upload
     data = {
@@ -28,19 +29,23 @@ def initiate_file_upload(
         "project_id": project_id,
         "drm_protection": drm_protection,
     }
+    if folder_id:
+        data["folder_id"] = folder_id
 
     response = requests.post(
         f"{urls.FILES_UPLOAD_URL}/start", headers=headers, json=data
     )
 
-    return handle_response(response)
+    response_data = handle_response(response)
+    payload = response_data.get("payload")
+    return InitiateUpload.from_dict(payload)
 
 
 def get_signed_upload_url(
     headers: dict[str, str],
+    key: str,
     upload_id: str,
     part_number: str,
-    key: str,
 ):
     # Make a GET request to get a signed upload URL for each part of your video
     params = {"key": key}
@@ -51,7 +56,9 @@ def get_signed_upload_url(
         params=params,
     )
 
-    return handle_response(response)
+    response_data = handle_response(response)
+    payload = response_data.get("payload")
+    return SignedUpload(**payload)
 
 
 def complete_file_upload(

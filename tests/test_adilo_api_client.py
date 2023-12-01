@@ -26,6 +26,9 @@ class TestAdiloAPI(unittest.TestCase):
         self.project_id = project.id
         return project
 
+    def create_folder(self, project_id, name, parent_id=None):
+        return self.adilo_api.create_folder(project_id, name, parent_id)
+
     def tearDown(self):
         if self.project_id:
             result = self.adilo_api.delete_project_by_id(self.project_id)

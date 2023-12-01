@@ -1,5 +1,6 @@
 import dataclasses
 import json
+from typing import Optional
 
 
 @dataclasses.dataclass
@@ -59,3 +60,28 @@ class Part:
 
     def to_json(self):
         return json.dumps(self.to_dict())
+
+
+@dataclasses.dataclass
+class InitiateUpload:
+    upload_id: str
+    key: str
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "InitiateUpload":
+        data_upload_id = data.get("uploadId")
+        data_key = data.get("key")
+
+        assert data_upload_id is not None, "uploadId is required"
+        assert data_key is not None, "key is required"
+
+        return cls(
+            upload_id=data_upload_id,
+            key=data_key,
+        )
+
+
+@dataclasses.dataclass
+class SignedUpload:
+    method: str
+    url: str

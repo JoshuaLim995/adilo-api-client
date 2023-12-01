@@ -82,7 +82,8 @@ class AdiloAPI:
         duration_string: str,
         mime_type: str,
         project_id: str,
-        drm_protection: bool,
+        folder_id: str | None = None,
+        drm_protection: bool = False,
     ):
         return files.initiate_file_upload(
             self.headers,
@@ -92,6 +93,7 @@ class AdiloAPI:
             duration_string,
             mime_type,
             project_id,
+            folder_id,
             drm_protection,
         )
 

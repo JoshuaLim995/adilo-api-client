@@ -4,12 +4,12 @@ from tests.test_adilo_api_client import TestAdiloAPI
 
 
 class FolderTestCase(TestAdiloAPI):
-    def create_folder(self, project_id, name, parent_id=None):
-        return self.adilo_api.create_folder(project_id, name, parent_id)
+    def setUp(self):
+        super().setUp()
+        self.project = self.create_project("test")
 
     def test_create_folder(self):
-        project = self.create_project("test")
-        folder = self.create_folder(project.id, "test_folder")
+        folder = self.create_folder(self.project.id, "test_folder")
 
         self.assertEqual(
             folder.name,
@@ -19,14 +19,15 @@ class FolderTestCase(TestAdiloAPI):
 
         self.assertEqual(
             folder.project_id,
-            project.id,
+            self.project.id,
             "create_folder failed project id does not match",
         )
 
     def test_create_subfolder(self):
-        project = self.create_project("test")
-        parent_folder = self.create_folder(project.id, "test_parent_folder")
-        sub_folder = self.create_folder(project.id, "test_sub_folder", parent_folder.id)
+        parent_folder = self.create_folder(self.project.id, "test_parent_folder")
+        sub_folder = self.create_folder(
+            self.project.id, "test_sub_folder", parent_folder.id
+        )
 
         self.assertEqual(
             sub_folder.name,
@@ -36,7 +37,7 @@ class FolderTestCase(TestAdiloAPI):
 
         self.assertEqual(
             sub_folder.project_id,
-            project.id,
+            self.project.id,
             "create_folder failed project id does not match",
         )
 
@@ -47,8 +48,7 @@ class FolderTestCase(TestAdiloAPI):
         )
 
     def test_get_folder_by_id(self):
-        project = self.create_project("test")
-        folder = self.create_folder(project.id, "test_folder")
+        folder = self.create_folder(self.project.id, "test_folder")
 
         result = self.adilo_api.get_folder_by_id(folder.id)
 
@@ -59,17 +59,16 @@ class FolderTestCase(TestAdiloAPI):
         )
         self.assertEqual(
             result.project_id,
-            project.id,
+            self.project.id,
             "get_folder_by_id failed project id does not match",
         )
 
     def test_update_folder(self):
-        project = self.create_project("test")
-        folder = self.create_folder(project.id, "test_folder")
+        folder = self.create_folder(self.project.id, "test_folder")
 
         updated_folder = self.adilo_api.update_folder(
             folder.id,
-            project.id,
+            self.project.id,
             "test_folder2",
         )
 
@@ -87,8 +86,7 @@ class FolderTestCase(TestAdiloAPI):
         )
 
     def test_delete_folder_by_id(self):
-        project = self.create_project("test")
-        folder = self.create_folder(project.id, "test_folder")
+        folder = self.create_folder(self.project.id, "test_folder")
 
         result = self.adilo_api.delete_folder_by_id(folder.id)
 
