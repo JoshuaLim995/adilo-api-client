@@ -54,7 +54,13 @@ def _validate_permissions(permissions: list[str]):
             )
 
 
-def create_user(headers, name, email, password, permissions: list[str]):
+def create_user(
+    headers: dict[str, str],
+    name,
+    email,
+    password,
+    permissions: list[str] = [],
+):
     # Validate permissions
     _validate_permissions(permissions)
 
@@ -71,7 +77,7 @@ def create_user(headers, name, email, password, permissions: list[str]):
     return handle_response(response)
 
 
-def list_users(headers, from_=1, to=50):
+def list_users(headers: dict[str, str], from_=1, to=50):
     # Make a GET request to list all users
     params = {"From": from_, "To": to}
     response = requests.get(urls.USERS_URL, headers=headers, params=params)
@@ -79,7 +85,7 @@ def list_users(headers, from_=1, to=50):
     return handle_response(response)
 
 
-def get_user_by_id(headers, user_id):
+def get_user_by_id(headers: dict[str, str], user_id):
     # Make a GET request to get a user by ID
     response = requests.get(f"{urls.USERS_URL}/{user_id}", headers=headers)
 
@@ -87,7 +93,12 @@ def get_user_by_id(headers, user_id):
 
 
 def update_user(
-    headers, user_id, name=None, email=None, password=None, permissions=None
+    headers: dict[str, str],
+    user_id,
+    name=None,
+    email=None,
+    password=None,
+    permissions: list[str] | None = None,
 ):
     # Validate permissions if provided
     if permissions is not None:
@@ -107,7 +118,7 @@ def update_user(
     return handle_response(response)
 
 
-def delete_user(headers, user_id):
+def delete_user(headers: dict[str, str], user_id: str):
     # Make a DELETE request to delete a user by ID
     response = requests.delete(f"{urls.USERS_URL}/{user_id}", headers=headers)
 

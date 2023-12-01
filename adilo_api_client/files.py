@@ -1,29 +1,22 @@
 import dataclasses
+from typing import Any
 
 import requests
 
 from adilo_api_client import endpoint_urls as urls
+from adilo_api_client.data_classes import Part
 from adilo_api_client.response_helper import handle_response
 
 
-@dataclasses.dataclass
-class Part:
-    part_number: int
-    etag: str
-
-    def to_dict(self):
-        return dataclasses.asdict(self)
-
-
 def initiate_file_upload(
-    headers,
-    filename,
-    filesize,
-    duration_seconds,
-    duration_string,
-    mime_type,
-    project_id,
-    drm_protection,
+    headers: dict[str, str],
+    filename: str,
+    filesize: str,
+    duration_seconds: int,
+    duration_string: str,
+    mime_type: str,
+    project_id: str,
+    drm_protection: bool,
 ):
     # Make a POST request to initiate a file upload
     data = {
@@ -43,7 +36,12 @@ def initiate_file_upload(
     return handle_response(response)
 
 
-def get_signed_upload_url(headers, upload_id, part_number, key):
+def get_signed_upload_url(
+    headers: dict[str, str],
+    upload_id: str,
+    part_number: str,
+    key: str,
+):
     # Make a GET request to get a signed upload URL for each part of your video
     params = {"key": key}
 
@@ -56,7 +54,12 @@ def get_signed_upload_url(headers, upload_id, part_number, key):
     return handle_response(response)
 
 
-def complete_file_upload(headers, key, upload_id, parts: list[Part]):
+def complete_file_upload(
+    headers: dict[str, str],
+    key: str,
+    upload_id,
+    parts: list[Part],
+):
     # Make a POST request to complete the multipart upload
     data = {"key": key, "uploadId": upload_id, "parts": parts}
 
@@ -68,14 +71,14 @@ def complete_file_upload(headers, key, upload_id, parts: list[Part]):
 
 
 def get_signed_upload_url_for_update(
-    headers,
-    file_id,
-    filename,
-    filesize,
-    duration_seconds,
-    duration_string,
-    mime_type,
-    drm_protection,
+    headers: dict[str, str],
+    file_id: str,
+    filename: str,
+    filesize: str,
+    duration_seconds: int,
+    duration_string: str,
+    mime_type: str,
+    drm_protection: bool,
     clear_statistics=False,
 ):
     # Make a GET request to get a signed upload URL for file upload
@@ -96,7 +99,7 @@ def get_signed_upload_url_for_update(
     return handle_response(response)
 
 
-def complete_file_update(headers, file_id):
+def complete_file_update(headers: dict[str, str], file_id: str):
     # Make a PUT request to complete the file update
     response = requests.put(
         f"{urls.FILES_URL}/{file_id}/update/complete", headers=headers
@@ -105,38 +108,35 @@ def complete_file_update(headers, file_id):
     return handle_response(response)
 
 
-def get_file_by_id(headers, file_id):
+def get_file_by_id(headers: dict[str, str], file_id: str):
     # Make a GET request to get a project file by its ID
     response = requests.get(f"{urls.FILES_URL}/{file_id}", headers=headers)
 
     return handle_response(response)
 
 
-def delete_file_by_id(headers, file_id):
+def delete_file_by_id(headers: dict[str, str], file_id: str):
     # Make a DELETE request to delete a project file by its ID
     response = requests.delete(f"{urls.FILES_URL}/{file_id}", headers=headers)
 
     return handle_response(response)
 
 
-def get_file_meta_data(headers, file_id):
+def get_file_meta_data(headers: dict[str, str], file_id: str):
     # Make a GET request to get a project file's metadata by its ID
     response = requests.get(f"{urls.FILES_URL}/{file_id}/meta", headers=headers)
 
     return handle_response(response)
 
 
-def download_file(
-    headers,
-    file_id,
-):
+def download_file(headers: dict[str, str], file_id: str):
     # Make a GET request to download a project file by its ID
     response = requests.get(f"{urls.FILES_URL}/{file_id}/download", headers=headers)
 
     return handle_response(response)
 
 
-def upload_subtitle(headers, file_id, file, language):
+def upload_subtitle(headers: dict[str, str], file_id: str, file: Any, language: str):
     # Make a POST request to upload a subtitle for a project file by its ID
     data = {"file_id": file_id, "file": file, "language": language}
 
@@ -147,7 +147,7 @@ def upload_subtitle(headers, file_id, file, language):
     return handle_response(response)
 
 
-def generate_subtitle(headers, file_id, language):
+def generate_subtitle(headers: dict[str, str], file_id: str, language: str):
     # Make a POST request to generate a subtitle for a project file by its ID
     data = {"file_id": file_id, "language": language}
 
@@ -158,7 +158,7 @@ def generate_subtitle(headers, file_id, language):
     return handle_response(response)
 
 
-def download_subtitle(headers, file_id):
+def download_subtitle(headers: dict[str, str], file_id: str):
     # Make a GET request to download a subtitle for a project file by its ID
     response = requests.get(
         f"{urls.FILES_URL}/{file_id}/subtitle/download", headers=headers
@@ -167,7 +167,7 @@ def download_subtitle(headers, file_id):
     return handle_response(response)
 
 
-def generate_translation(headers, file_id, language):
+def generate_translation(headers: dict[str, str], file_id: str, language: str):
     # Make a POST request to generate a translation for a project file by its ID
     data = {"file_id": file_id, "language": language}
 
@@ -180,13 +180,26 @@ def generate_translation(headers, file_id, language):
     return handle_response(response)
 
 
-def download_translation(headers, file_id, language):
+def download_translation(headers: dict[str, str], file_id: str, language: str):
     # Make a GET request to download a translation for a project file by its ID
     params = {"language": language}
     response = requests.get(
         f"https://adilo-api.bigcommand.com/v1/files/{file_id}/translation/download",
         headers=headers,
         params=params,
+    )
+
+    return handle_response(response)
+
+
+def get_files_by_project_id(
+    headers: dict[str, str], project_id: str, from_result=1, to_result=50
+):
+    # Make a GET request to fetch project files by project ID
+    response = requests.get(
+        f"{urls.PROJECTS_URL}/{project_id}/files",
+        params={"From": from_result, "To": to_result},
+        headers=headers,
     )
 
     return handle_response(response)
