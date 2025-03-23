@@ -91,6 +91,7 @@ def get_signed_upload_url_for_update(
     mime_type: str,
     drm_protection: bool,
     clear_statistics=False,
+    folder_id: str | None = None,
 ):
     # Make a GET request to get a signed upload URL for file upload
     data = {
@@ -102,6 +103,8 @@ def get_signed_upload_url_for_update(
         "drm_protection": drm_protection,
         "clear_statistics": clear_statistics,
     }
+    if folder_id:
+        data["folder_id"] = folder_id
 
     response = requests.get(
         f"{urls.FILES_URL}/{file_id}/update/get-signed-url", headers=headers, json=data

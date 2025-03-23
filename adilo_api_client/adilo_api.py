@@ -113,6 +113,7 @@ class AdiloAPI:
         mime_type: str,
         drm_protection: bool,
         clear_statistics=False,
+        folder_id: str | None = None,
     ):
         return files.get_signed_upload_url_for_update(
             self.headers,
@@ -124,6 +125,7 @@ class AdiloAPI:
             mime_type,
             drm_protection,
             clear_statistics,
+            folder_id,
         )
 
     def complete_file_update(self, file_id: str):
