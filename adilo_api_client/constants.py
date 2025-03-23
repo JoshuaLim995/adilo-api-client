@@ -1,4 +1,3 @@
-
 # Supported languages for the Adilo API
 class Languages:
     ENGLISH = "English"
